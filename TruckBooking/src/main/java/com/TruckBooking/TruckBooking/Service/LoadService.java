@@ -1,5 +1,6 @@
 package com.TruckBooking.TruckBooking.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.TruckBooking.TruckBooking.Entities.Load;
@@ -18,4 +19,6 @@ public interface LoadService {
 	public Load getLoad(String loadId);
 
 	public void deleteLoad(String loadId);
+
+    List<Load> getLoadsByTransporterId(String transporterId);
 }

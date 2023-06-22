@@ -8,6 +8,8 @@ import com.TruckBooking.TruckBooking.Entities.Load.Status;
 
 import lombok.Data;
 
+import java.util.ArrayList;
+
 @Data
 public class LoadRequest {
 
@@ -33,6 +35,7 @@ public class LoadRequest {
 	private String unloadingPointCity2;  //optional
 	private String unloadingPointState2; //optional
 
+	private ArrayList<ArrayList<String>> emailList;
 	@NotBlank(message = "Product Type Cannot Be Empty")
 	private String productType;
 	@NotBlank(message = "Truck Type Cannot Be Empty")

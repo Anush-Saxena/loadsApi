@@ -1,6 +1,7 @@
 package com.TruckBooking.TruckBooking.Response;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -27,6 +28,7 @@ public class CreateLoadResponse {
 	private String unloadingPointCity2;  //optional
 	private String unloadingPointState2; //optional
 
+	private ArrayList<ArrayList<String>> emailList;
 	private String postLoadId;
 	private String productType;
 	private String truckType;

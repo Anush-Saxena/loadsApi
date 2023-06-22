@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.TruckBooking.TruckBooking.Dao.TransporterEmailDao;
+import com.TruckBooking.TruckBooking.Entities.TransporterEmail;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -34,6 +36,9 @@ public class LoadServiceImpl implements LoadService {
 
 	@Autowired
 	LoadDao loadDao;
+
+	@Autowired
+	TransporterEmailDao transporterEmailDao;
 
 	@Transactional(rollbackFor = Exception.class)
 	@Override
@@ -180,6 +185,16 @@ public class LoadServiceImpl implements LoadService {
 		}
 
 		loadDao.save(load);
+		if(loadrequest.getEmailList()!=null) {
+			for (ArrayList<String> detail : loadrequest.getEmailList()) {
+				TransporterEmail transporterEmail = new TransporterEmail();
+				transporterEmail.setEmail(detail.get(0));
+				transporterEmail.setTransporterId(detail.get(1));
+				transporterEmail.setLoad(load);
+				transporterEmailDao.save(transporterEmail);
+			}
+			response.setEmailList(loadrequest.getEmailList());
+		}
 		log.info("load is saved to the database");
 		log.info("addLoad service response is returned");
 		response.setTimestamp(load.getTimestamp());
@@ -455,4 +470,8 @@ public class LoadServiceImpl implements LoadService {
 		log.info("load is deleted successfully");
 	}
 
+	@Override
+	public List<Load> getLoadsByTransporterId(String transporterId) {
+		return transporterEmailDao.findLoadsByTransporterId(transporterId);
+	}
 }

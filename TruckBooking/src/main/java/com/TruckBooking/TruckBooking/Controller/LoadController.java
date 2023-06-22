@@ -1,9 +1,11 @@
 package com.TruckBooking.TruckBooking.Controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
 
+import com.TruckBooking.TruckBooking.Response.TransporterResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -77,4 +79,9 @@ public class LoadController {
 		return new ResponseEntity<>("Successfully Deleted", HttpStatus.OK);
 	}
 
+	@GetMapping("/load/transporter/{transporterId}")
+	public ResponseEntity<TransporterResponse> getLoadsByTransporterId(@PathVariable String transporterId){
+		log.info("Get Loads By Transporter Id Started");
+		return new ResponseEntity<>(new TransporterResponse(loadService.getLoadsByTransporterId(transporterId)),HttpStatus.OK);
+	}
 }
