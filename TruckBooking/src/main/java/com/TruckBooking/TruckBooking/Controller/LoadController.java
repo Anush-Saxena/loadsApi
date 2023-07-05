@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import com.TruckBooking.TruckBooking.Response.TransporterResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,12 +50,13 @@ public class LoadController {
 			@RequestParam(name = "postLoadId", required = false) String postLoadId,
 			@RequestParam(name = "truckType", required = false) String truckType,
 			@RequestParam(name = "loadDate", required = false) String loadDate,
-			@RequestParam(name = "suggestedLoads", required = false) boolean suggestedLoads) {
+			@RequestParam(name = "suggestedLoads", required = false) boolean suggestedLoads,
+			@RequestParam(name="transporterId", required=false) String transporterId) {
 
 		log.info("Get with Params Controller Started");
 
 		return new ResponseEntity<>(loadService.getLoads(pageNo, loadingPointCity, unloadingPointCity, postLoadId,
-				truckType, loadDate, suggestedLoads), HttpStatus.OK);
+				truckType, loadDate, suggestedLoads, transporterId), HttpStatus.OK);
 	}
 
 	@GetMapping("/load/{loadId}")
@@ -79,9 +79,4 @@ public class LoadController {
 		return new ResponseEntity<>("Successfully Deleted", HttpStatus.OK);
 	}
 
-	@GetMapping("/load/transporter/{transporterId}")
-	public ResponseEntity<TransporterResponse> getLoadsByTransporterId(@PathVariable String transporterId){
-		log.info("Get Loads By Transporter Id Started");
-		return new ResponseEntity<>(new TransporterResponse(loadService.getLoadsByTransporterId(transporterId)),HttpStatus.OK);
-	}
 }

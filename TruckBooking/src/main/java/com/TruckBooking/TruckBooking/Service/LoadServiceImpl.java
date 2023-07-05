@@ -185,15 +185,16 @@ public class LoadServiceImpl implements LoadService {
 		}
 
 		loadDao.save(load);
-		if(loadrequest.getEmailList()!=null) {
-			for (ArrayList<String> detail : loadrequest.getEmailList()) {
+		if(loadrequest.getTransporterList()!=null) {
+			for (ArrayList<String> detail : loadrequest.getTransporterList()) {
 				TransporterEmail transporterEmail = new TransporterEmail();
 				transporterEmail.setEmail(detail.get(0));
-				transporterEmail.setTransporterId(detail.get(1));
+				transporterEmail.setName(detail.get(1));
+				transporterEmail.setTransporterId(detail.get(2));
 				transporterEmail.setLoad(load);
 				transporterEmailDao.save(transporterEmail);
 			}
-			response.setEmailList(loadrequest.getEmailList());
+			response.setTransporterList(loadrequest.getTransporterList());
 		}
 		log.info("load is saved to the database");
 		log.info("addLoad service response is returned");
@@ -205,7 +206,7 @@ public class LoadServiceImpl implements LoadService {
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	@Override
 	public List<Load> getLoads(Integer pageNo, String loadingPointCity, String unloadingPointCity, String postLoadId,
-			String truckType, String loadDate, boolean suggestedLoads) {
+			String truckType, String loadDate, boolean suggestedLoads, String transporterId) {
 		log.info("getLoads service with params started");
 
 		if (pageNo == null)
@@ -254,7 +255,10 @@ public class LoadServiceImpl implements LoadService {
 			// Collections.reverse(load);
 			return load;
 		}
-
+		if(transporterId!=null){
+			List<Load> load=transporterEmailDao.findLoadsByTransporterId(transporterId);
+			return load;
+		}
 
 		log.info("getLoads service response is returned");
 		return loadDao.findByStatus(Load.Status.PENDING, currentPage);
@@ -470,8 +474,4 @@ public class LoadServiceImpl implements LoadService {
 		log.info("load is deleted successfully");
 	}
 
-	@Override
-	public List<Load> getLoadsByTransporterId(String transporterId) {
-		return transporterEmailDao.findLoadsByTransporterId(transporterId);
-	}
 }

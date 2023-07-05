@@ -28,7 +28,7 @@ public class CreateLoadResponse {
 	private String unloadingPointCity2;  //optional
 	private String unloadingPointState2; //optional
 
-	private ArrayList<ArrayList<String>> emailList;
+	private ArrayList<ArrayList<String>> transporterList;
 	private String postLoadId;
 	private String productType;
 	private String truckType;

@@ -13,4 +13,6 @@ import java.util.List;
 public interface TransporterEmailDao extends JpaRepository<TransporterEmail, Long> {
     @Query("SELECT t.load FROM TransporterEmail t WHERE t.transporterId = :transporterId")
     List<Load> findLoadsByTransporterId(@Param("transporterId") String transporterId);
+
+    List<TransporterEmail> findByStatus(String status);
 }

@@ -23,9 +23,11 @@ public class TransporterEmail {
     @NotBlank(message = "Email Cannot Be Empty")
     private String email;
 
+    @NotBlank(message = "Name Cannot Be Empty")
+    private String name;
 
     private String status="not-sent";
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "load_id", foreignKey = @ForeignKey(name = "FK_transporter_load"))
     private Load load;
 

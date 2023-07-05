@@ -35,7 +35,7 @@ public class LoadRequest {
 	private String unloadingPointCity2;  //optional
 	private String unloadingPointState2; //optional
 
-	private ArrayList<ArrayList<String>> emailList;
+	private ArrayList<ArrayList<String>> transporterList;
 	@NotBlank(message = "Product Type Cannot Be Empty")
 	private String productType;
 	@NotBlank(message = "Truck Type Cannot Be Empty")
