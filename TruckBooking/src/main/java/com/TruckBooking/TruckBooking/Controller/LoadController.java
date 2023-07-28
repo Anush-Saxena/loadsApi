@@ -49,14 +49,13 @@ public class LoadController {
 			@RequestParam(name = "unloadingPointCity", required = false) String unloadingPointCity,
 			@RequestParam(name = "postLoadId", required = false) String postLoadId,
 			@RequestParam(name = "truckType", required = false) String truckType,
-			@RequestParam(name = "loadDate", required = false) String loadDate,
 			@RequestParam(name = "suggestedLoads", required = false) boolean suggestedLoads,
 			@RequestParam(name="transporterId", required=false) String transporterId) {
 
 		log.info("Get with Params Controller Started");
 
 		return new ResponseEntity<>(loadService.getLoads(pageNo, loadingPointCity, unloadingPointCity, postLoadId,
-				truckType, loadDate, suggestedLoads, transporterId), HttpStatus.OK);
+				truckType,suggestedLoads, transporterId), HttpStatus.OK);
 	}
 
 	@GetMapping("/load/{loadId}")

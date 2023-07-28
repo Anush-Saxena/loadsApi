@@ -43,11 +43,6 @@ paths:
       produces:
         - '*/*'
       parameters:
-        - name: loadDate
-          in: query
-          description: loadDate
-          required: false
-          type: string
         - name: loadingPointCity
           in: query
           description: loadingPointCity
@@ -215,8 +210,6 @@ definitions:
     properties:
       comment:
         type: string
-      loadDate:
-        type: string
       loadId:
         type: string
       loadingPoint:
@@ -263,8 +256,6 @@ definitions:
     properties:
       comment:
         type: string
-      loadDate:
-        type: string
       loadId:
         type: string
       loadingPoint:
@@ -305,8 +296,6 @@ definitions:
     properties:
       comment:
         type: string
-      loadDate:
-        type: string
       loadingPoint:
         type: string
       loadingPointCity:
@@ -344,8 +333,6 @@ definitions:
     type: object
     properties:
       comment:
-        type: string
-      loadDate:
         type: string
       loadId:
         type: string

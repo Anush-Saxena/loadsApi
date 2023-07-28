@@ -26,8 +26,6 @@ public interface LoadDao extends JpaRepository<Load, String> {
 
 	List<Load> findByTruckTypeAndStatus(String truckType,Status status, Pageable pageable);
 
-	List<Load> findByLoadDateAndStatus(String loadDate, Status status,Pageable pageable);
-
 	List<Load> findByLoadingPointCityAndStatus(String loadingPointCity, Status status,Pageable pageable);
 
 	List<Load> findByLoadingPointStateAndStatus(String loadingPointState, Status status,Pageable pageable);

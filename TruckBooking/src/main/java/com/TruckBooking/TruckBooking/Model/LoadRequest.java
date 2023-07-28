@@ -48,8 +48,9 @@ public class LoadRequest {
 	private String LR; // optional
 	
 	private String comment; // this should be an optional
-	@NotBlank(message = "Load Date Cannot Be Empty")
-	private String loadDate;
+	private String loadingDate;
+	private String publishMethod;
+	private String loadingTime;
 	private Long rate;
 
 	@Enumerated(EnumType.STRING)

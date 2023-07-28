@@ -31,7 +31,6 @@ public class CommonConstants {
 	public static String emptytruckno = "Empty number of trucks";
 	public static String emptytrucktype = "Empty truck type";
 	public static String emptyproducttype = "Empty product type";
-	public static String emptydate = "Empty date";
 	public static String emptyweight = "Empty weight";
 	public static String emptypostloadid = "Empty postLoadId";
 	public static String emptycomment = "Empty comment";

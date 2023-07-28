@@ -149,9 +149,24 @@ public class LoadServiceImpl implements LoadService {
 		load.setWeight(temp);
 		response.setWeight(temp);
 
-		temp = loadrequest.getLoadDate().trim();
-		load.setLoadDate(temp);
-		response.setLoadDate(temp);
+		temp = loadrequest.getLoadingDate();
+		if(StringUtils.isNotBlank(temp)) {
+			load.setLoadingDate(temp.trim());
+			response.setLoadingDate(temp.trim());
+		}
+		
+		temp = loadrequest.getPublishMethod();
+		if(StringUtils.isNotBlank(temp)) {
+			load.setPublishMethod(temp.trim());
+			response.setPublishMethod(temp.trim());
+		}
+		
+		temp = loadrequest.getLoadingTime();
+		if(StringUtils.isNotBlank(temp)) {
+			load.setLoadingTime(temp.trim());
+			response.setLoadingTime(temp.trim());
+		}
+
 		
 		temp=ZonedDateTime.now(ZoneId.of("Asia/Kolkata")).format(DateTimeFormatter.ofPattern("E, MMM dd yyyy"));
 		load.setPostLoadDate(temp);
@@ -206,7 +221,7 @@ public class LoadServiceImpl implements LoadService {
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	@Override
 	public List<Load> getLoads(Integer pageNo, String loadingPointCity, String unloadingPointCity, String postLoadId,
-			String truckType, String loadDate, boolean suggestedLoads, String transporterId) {
+			String truckType, boolean suggestedLoads, String transporterId) {
 		log.info("getLoads service with params started");
 
 		if (pageNo == null)
@@ -250,11 +265,7 @@ public class LoadServiceImpl implements LoadService {
 			return load;
 		}
 
-		if (loadDate != null) {
-			List<Load> load = loadDao.findByLoadDateAndStatus(loadDate,Load.Status.PENDING, currentPage);
-			// Collections.reverse(load);
-			return load;
-		}
+	
 		if(transporterId!=null){
 			List<Load> load=transporterEmailDao.findLoadsByTransporterId(transporterId);
 			return load;
@@ -372,9 +383,19 @@ public class LoadServiceImpl implements LoadService {
 			load.setWeight(temp.trim());
 		}
 
-		temp = updateLoad.getLoadDate();
+		temp = updateLoad.getLoadingDate();
 		if (StringUtils.isNotBlank(temp)) {
-			load.setLoadDate(temp.trim());
+			load.setLoadingDate(temp.trim());
+		}
+		
+		temp = updateLoad.getPublishMethod();
+		if (StringUtils.isNotBlank(temp)) {
+			load.setPublishMethod(temp.trim());
+		}
+		
+		temp = updateLoad.getLoadingTime();
+		if (StringUtils.isNotBlank(temp)) {
+			load.setLoadingTime(temp.trim());
 		}
 
 		temp = updateLoad.getPostLoadId();
@@ -442,10 +463,12 @@ public class LoadServiceImpl implements LoadService {
 		response.setNoOfTrucks(load.getNoOfTrucks());
 		response.setNoOfTyres(load.getNoOfTyres());
 		response.setWeight(load.getWeight());
-		response.setLoadDate(load.getLoadDate());
+		response.setLoadingDate(load.getLoadingDate());
 		response.setPostLoadDate(load.getPostLoadDate());
 		response.setComment(load.getComment());
 		response.setLR(load.getLR());
+		response.setPublishMethod(load.getPublishMethod());
+		response.setLoadingTime(load.getLoadingTime());
 		response.setStatus(load.getStatus());
 		response.setRate(load.getRate());
 		response.setTimestamp(load.getTimestamp());

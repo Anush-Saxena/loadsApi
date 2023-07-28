@@ -12,7 +12,7 @@ public interface LoadService {
 	public CreateLoadResponse addLoad(LoadRequest load);
 
 	public List<Load> getLoads(Integer pageNo, String loadingPointCity, String unloadingPointCity, String shipperId,
-			String truckType, String date, boolean suggestedLoads, String transporterId);
+			String truckType, boolean suggestedLoads, String transporterId);
 
 	public UpdateLoadResponse updateLoad(String loadId, LoadRequest loadrequest);
 
