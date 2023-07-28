@@ -1,4 +1,4 @@
-/*package com.TruckBooking.TruckBooking.EmailTask;
+package com.TruckBooking.TruckBooking.EmailTask;
 
 import com.TruckBooking.TruckBooking.Dao.TransporterEmailDao;
 import com.TruckBooking.TruckBooking.Entities.Load;
@@ -66,4 +66,4 @@ public class EmailSender {
             transporterEmailDao.save(transporterEmail);
         }
     }
-}*/
+}
