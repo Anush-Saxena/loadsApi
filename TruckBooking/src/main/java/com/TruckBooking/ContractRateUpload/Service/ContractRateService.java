@@ -153,27 +153,6 @@ public class ContractRateService {
         return list;
     }
 
-	public List<Rates> getAllProducts() {
-        return this.contractpricerepo.findAll();
-    }
-
-    public List<Integer> getAllPrice(String station, Integer weight,Integer loadId) {
-
-        List<Rates> list = this.contractpricerepo.findByUnLoadingPointAndWeightOrderByRateAsc(station,weight);
-        ArrayList<Integer> transport = new ArrayList<>();
-
-		for (Rates i : list) {
-            transport.add(i.getTransporterId());
-        }
-
-        Indent res=new Indent(loadId, transport, (list.get(0)).getTransporterId(),(list.get(0).getTransporterEmail()),Status.ASSIGNED);
-        this.indentdao.save(res);
-        System.out.println(list.get(0));
-
-        return transport;
-        // return list.stream().map(Product::getRate).collect(Collectors.toList());
-    }
-
 	// this function helps us to save excel file.
     public void save(MultipartFile file) {
 
