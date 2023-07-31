@@ -32,6 +32,7 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 <<<<<<< HEAD
+<<<<<<< HEAD
 		
 =======
 		<!-- Help us to read data from excel sheet -->
@@ -41,6 +42,9 @@
     <version>5.2.2</version>
 </dependency>
 >>>>>>> 574ef77 (Update pom.xml)
+=======
+
+>>>>>>> 0aedfc3 (Revert "Update contract service")
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
