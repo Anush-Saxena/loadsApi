@@ -16,7 +16,7 @@ public interface LoadService {
 
 	public UpdateLoadResponse updateLoad(String loadId, LoadRequest loadrequest);
 
-	public Load getLoad(String loadId);
+	public CreateLoadResponse getLoad(String loadId);
 
 	public void deleteLoad(String loadId);
 

@@ -205,7 +205,8 @@ public class LoadServiceImpl implements LoadService {
 				TransporterEmail transporterEmail = new TransporterEmail();
 				transporterEmail.setEmail(detail.get(0));
 				transporterEmail.setName(detail.get(1));
-				transporterEmail.setTransporterId(detail.get(2));
+				transporterEmail.setPhoneNo(detail.get(2));
+				transporterEmail.setTransporterId(detail.get(3));
 				transporterEmail.setLoad(load);
 				transporterEmailDao.save(transporterEmail);
 			}
@@ -277,13 +278,67 @@ public class LoadServiceImpl implements LoadService {
 
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	@Override
-	public Load getLoad(String loadId) {
+	public CreateLoadResponse getLoad(String loadId) {
 		log.info("getLoad service by Id is started");
 		Optional<Load> load = loadDao.findByLoadId(loadId);
 		if (load.isEmpty())
 			throw new EntityNotFoundException(Load.class, "id", loadId.toString());
 		log.info("getLoad service response is returned");
-		return load.get();
+		CreateLoadResponse response=new CreateLoadResponse();
+		List<TransporterEmail> list=transporterEmailDao.findByLoadLoadId(loadId);
+		ArrayList<ArrayList<String>> emailList=new ArrayList<>();
+		for(TransporterEmail transporterEmail:list){
+			ArrayList<String> temp=new ArrayList<>();
+			temp.add(transporterEmail.getEmail());
+			temp.add(transporterEmail.getName());
+			temp.add(transporterEmail.getPhoneNo());
+			temp.add(transporterEmail.getTransporterId());
+			emailList.add(temp);
+		}
+		response.setLoadId(load.get().getLoadId());
+
+		response.setLoadingPoint(load.get().getLoadingPoint());
+		response.setLoadingPointCity(load.get().getLoadingPointCity());
+		response.setLoadingPointState(load.get().getLoadingPointState());
+
+		response.setUnloadingPoint(load.get().getUnloadingPoint());
+		response.setUnloadingPointCity(load.get().getUnloadingPointCity());
+		response.setUnloadingPointState(load.get().getUnloadingPointState());
+
+		response.setLoadingPoint2(load.get().getLoadingPoint2());
+		response.setLoadingPointCity2(load.get().getLoadingPointCity2());
+		response.setLoadingPointState2(load.get().getLoadingPointState2());
+
+		response.setUnloadingPoint2(load.get().getUnloadingPoint2());
+		response.setUnloadingPointCity2(load.get().getUnloadingPointCity2());
+		response.setUnloadingPointState2(load.get().getUnloadingPointState2());
+
+		response.setPostLoadId(load.get().getPostLoadId());
+		response.setProductType(load.get().getProductType());
+		response.setTruckType(load.get().getTruckType());
+		response.setNoOfTrucks(load.get().getNoOfTrucks());
+		response.setNoOfTyres(load.get().getNoOfTyres());
+		response.setWeight(load.get().getWeight());
+		response.setLoadingDate(load.get().getLoadingDate());
+		response.setPublishMethod(load.get().getPublishMethod());
+		response.setLoadingTime(load.get().getLoadingTime());
+		response.setPostLoadDate(load.get().getPostLoadDate());
+		response.setStatus(load.get().getStatus());
+		response.setLR(load.get().getLR());
+		response.setComment(load.get().getComment());
+		response.setRate(load.get().getRate());
+		String temp = String.valueOf(load.get().getUnitValue());
+		if ("PER_TON".equals(temp)) {
+			response.setUnitValue(CreateLoadResponse.UnitValue.PER_TON);
+		}
+		else if ("PER_TRUCK".equals(temp)) {
+			response.setUnitValue(CreateLoadResponse.UnitValue.PER_TRUCK);
+		}
+		response.setTimestamp(load.get().getTimestamp());
+
+		response.setTransporterList(emailList);
+
+		return response;
 	}
 
 	@Transactional(rollbackFor = Exception.class)

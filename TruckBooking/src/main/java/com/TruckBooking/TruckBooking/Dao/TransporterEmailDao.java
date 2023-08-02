@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -21,4 +22,5 @@ public interface TransporterEmailDao extends JpaRepository<TransporterEmail, Lon
     @Query("DELETE FROM TransporterEmail t WHERE t.load.loadId = :loadId")
     void deleteTransporterEmailsByLoadId(String loadId);
 
+    List<TransporterEmail> findByLoadLoadId(String loadId);
 }
