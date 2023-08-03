@@ -285,7 +285,11 @@ public class LoadServiceImpl implements LoadService {
 			throw new EntityNotFoundException(Load.class, "id", loadId.toString());
 		log.info("getLoad service response is returned");
 		CreateLoadResponse response=new CreateLoadResponse();
+
+//		Getting List of all Transporter Associated with load
 		List<TransporterEmail> list=transporterEmailDao.findByLoadLoadId(loadId);
+
+//		Setting up the transporter List for response
 		ArrayList<ArrayList<String>> emailList=new ArrayList<>();
 		for(TransporterEmail transporterEmail:list){
 			ArrayList<String> temp=new ArrayList<>();
@@ -295,6 +299,7 @@ public class LoadServiceImpl implements LoadService {
 			temp.add(transporterEmail.getTransporterId());
 			emailList.add(temp);
 		}
+//		Setting all the of load fields for the response
 		response.setLoadId(load.get().getLoadId());
 
 		response.setLoadingPoint(load.get().getLoadingPoint());
@@ -338,6 +343,7 @@ public class LoadServiceImpl implements LoadService {
 
 		response.setTransporterList(emailList);
 
+//		Sending the response
 		return response;
 	}
 
