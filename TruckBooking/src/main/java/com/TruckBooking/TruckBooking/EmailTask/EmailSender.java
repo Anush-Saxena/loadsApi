@@ -32,7 +32,7 @@ public class EmailSender {
     @Value("${SHIPPER_HOST}")
     private String shipperHost;
 
-    @Scheduled(fixedRate = 300000)
+    @Scheduled(fixedRate = 60000)
     public void sendEmail() throws MessagingException {
         List<TransporterEmail> emailList=transporterEmailDao.findByStatus("not-sent");
         for(TransporterEmail transporterEmail:emailList){
