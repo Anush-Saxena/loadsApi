@@ -46,6 +46,8 @@ public class LoadRequest {
 	private String noOfTrucks;
 	private String noOfTyres;
 	private String LR; // optional
+	private String biddingEndDate;  //optional
+	private String biddingEndTime; //optional
 	
 	private String comment; // this should be an optional
 	private String loadingDate;

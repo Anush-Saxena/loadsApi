@@ -145,6 +145,18 @@ public class LoadServiceImpl implements LoadService {
 			response.setLR(temp.trim());
 		}
 		
+		temp = loadrequest.getBiddingEndDate();
+		if(StringUtils.isNotBlank(temp)) {
+			load.setBiddingEndDate(temp.trim());
+			response.setBiddingEndDate(temp.trim());
+		}
+		
+		temp = loadrequest.getBiddingEndTime();
+		if(StringUtils.isNotBlank(temp)) {
+			load.setBiddingEndTime(temp.trim());
+			response.setBiddingEndTime(temp.trim());
+		}
+		
 		temp = loadrequest.getWeight().trim();
 		load.setWeight(temp);
 		response.setWeight(temp);
@@ -471,6 +483,17 @@ public class LoadServiceImpl implements LoadService {
 		if(updateLoad.getLR() != null) {
 			load.setLR(updateLoad.getLR());
 		}
+		
+		temp = updateLoad.getBiddingEndDate();
+		if (StringUtils.isNotBlank(temp)) {
+			load.setBiddingEndDate(temp.trim());
+		}
+		
+		temp = updateLoad.getBiddingEndTime();
+		if (StringUtils.isNotBlank(temp)) {
+			load.setBiddingEndTime(temp.trim());
+		}
+		
 
 		if (updateLoad.getStatus() != null) {
 
@@ -528,6 +551,8 @@ public class LoadServiceImpl implements LoadService {
 		response.setPostLoadDate(load.getPostLoadDate());
 		response.setComment(load.getComment());
 		response.setLR(load.getLR());
+		response.setBiddingEndDate(load.getBiddingEndDate());
+		response.setBiddingEndTime(load.getBiddingEndTime());
 		response.setPublishMethod(load.getPublishMethod());
 		response.setLoadingTime(load.getLoadingTime());
 		response.setStatus(load.getStatus());

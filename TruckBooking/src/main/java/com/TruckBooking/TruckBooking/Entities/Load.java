@@ -40,6 +40,8 @@ public class Load {
 	private String unloadingPoint2;		//optional
 	private String unloadingPointCity2;  //optional
 	private String unloadingPointState2; //optional
+	
+	
 
 	@NotBlank(message = "Product Type Cannot Be Empty")
 	private String productType;
@@ -62,6 +64,9 @@ public class Load {
 	private String postLoadDate;
 	
 	private Long rate; // optional
+	
+	private String biddingEndDate;  //optional
+	private String biddingEndTime; //optional
 
 	@Enumerated(EnumType.STRING)
 	private UnitValue unitValue; // optional
