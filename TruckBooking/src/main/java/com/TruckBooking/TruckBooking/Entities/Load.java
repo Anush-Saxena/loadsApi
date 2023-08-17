@@ -74,6 +74,9 @@ public class Load {
 	@Enumerated(EnumType.STRING)
 	public Status status;
 
+    @Enumerated(EnumType.STRING)
+	public Publish publish;
+	
 	@CreationTimestamp
 	public Timestamp timestamp;
 
@@ -83,6 +86,9 @@ public class Load {
 
 	public enum Status {
 		PENDING, ON_GOING, COMPLETED, EXPIRED
+	}
+		public enum Publish {
+		CONTRACT, BIDDING
 	}
 
 }

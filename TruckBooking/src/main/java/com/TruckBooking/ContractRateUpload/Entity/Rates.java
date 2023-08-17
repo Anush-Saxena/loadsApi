@@ -30,14 +30,14 @@ public class Rates {
 
     @NotNull(message = "Weight Cannot Be Empty")
     @Column(name = "weight")
-    private Integer weight;
+    private String weight;
 
     @NotNull(message = "Rates Cannot Be Empty")
     @Column(name = "rate")
     private Integer rate;
 
     @Column(name = "TransporterId")
-    private Integer TransporterId;
+    private String TransporterId;
 
     @NotBlank(message = "Transporter Name Cannot Be Empty")
     @Column(name = "TransporterName")
