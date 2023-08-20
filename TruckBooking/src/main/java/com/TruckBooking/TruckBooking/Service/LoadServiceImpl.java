@@ -52,15 +52,6 @@ public class LoadServiceImpl implements LoadService {
 	@Autowired
 	TransporterEmailDao transporterEmailDao;
 
-	@Autowired
-    ContractRateRepo contractpricerepo;
-
-	@Autowired
-    IndentDao rankrepo;
-
-	@Autowired
-	private JavaMailSender mailSender;
-
 	@Transactional(rollbackFor = Exception.class)
 	@Override
 	public CreateLoadResponse addLoad(LoadRequest loadrequest) {
@@ -603,7 +594,4 @@ public class LoadServiceImpl implements LoadService {
 		loadDao.delete(L.get());
 		log.info("load is deleted successfully");
 	}
-			public List<Rates> getAllProducts() {
-        return this.contractpricerepo.findAll();
-    }
 }
