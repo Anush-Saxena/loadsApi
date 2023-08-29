@@ -1,63 +1,50 @@
 package com.TruckBooking.ContractRateUpload.Entity;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 @Entity
 @Data
-@NoArgsConstructor
 @RequiredArgsConstructor
 public class Indent {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
+    @Id 
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @Column(name="id")
+	private Long id;
 
-    @NonNull
-    @Column(name = "loadId")
-    private String loadId;
+    @Column(name="loadId")
+    private final Integer loadId;
 
-    @ElementCollection
-    @CollectionTable(name = "transporter_ids", joinColumns = @JoinColumn(name = "indent_id"))
-    @Column(name = "transporter_id")
-    private List<String> transporterId = new ArrayList<>(); // Initialize the list
+    @Column(name="transporterId")
+    private final ArrayList<Integer> transporterId;
 
-    @NonNull
     @Column(name = "Transporter")
-    private String transporter;
+    private final Integer Transporter;
 
-    @NonNull
     @Column(name = "Email")
-    private String email;
+    private final String email;
 
     @UpdateTimestamp
     @Column(name = "AssignedTime")
-    private Timestamp assignedTime;
+    private Timestamp AssignedTime;
 
     @Enumerated(EnumType.STRING)
-    @NonNull
-    private TransporterStatus transporterStatus;
+    public final Status status;
 
-    public enum TransporterStatus {
-        PENDING, ON_GOING, COMPLETED, EXPIRED, REJECTED
-    }
-
-    // Custom constructor
-    public Indent(String loadId, List<String>transport,String transporter, String Email,TransporterStatus status) {
-        this.loadId = loadId;
-        this.transporterId = transport;
-        this.transporter=transporter;
-        this.email=Email;
-        this.transporterStatus = status;
+    public enum Status {
+        EXPIRED, ASSIGNED, REJECTED, COMPLETED;
     }
 }

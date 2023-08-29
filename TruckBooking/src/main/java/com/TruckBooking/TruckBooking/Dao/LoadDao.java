@@ -9,7 +9,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.TruckBooking.TruckBooking.Entities.Load;
-import com.TruckBooking.TruckBooking.Entities.Load.Publish;
 import com.TruckBooking.TruckBooking.Entities.Load.Status;
 
 @Repository
@@ -36,6 +35,4 @@ public interface LoadDao extends JpaRepository<Load, String> {
 	List<Load> findByUnloadingPointStateAndStatus(String loadingPointState,Status status, Pageable pageable);
 	
 	List<Load> findByStatus(Status status, Pageable pageable);
-	List<Load>findByPublishAndStatus(Publish publish,Status status);
-
 }

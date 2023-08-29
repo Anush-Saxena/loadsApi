@@ -41,8 +41,6 @@ public class CreateLoadResponse {
 	private String postLoadDate;
 	public Status status;
 	private String LR; //optional
-	private String biddingEndDate;  //optional
-	private String biddingEndTime; //optional
 	private String comment; // this should be an optional
 	private Long rate;
 
