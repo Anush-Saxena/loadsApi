@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
 import javax.mail.internet.MimeMessage;
 import javax.persistence.EntityManager;
 import java.nio.charset.StandardCharsets;
@@ -58,7 +59,15 @@ public class EmailSender {
                     "Tyre :"+load.getNoOfTyres()+"<br>"+
                     "Weight :"+load.getWeight()+"<br>"+
                     "Product Type :"+load.getProductType();
-            helper.setTo(transporterEmail.getEmail());
+            try{
+                helper.setTo(transporterEmail.getEmail());
+            }
+            catch (AddressException e){
+                System.out.println(e);
+                transporterEmail.setStatus("wrong email");
+                transporterEmailDao.save(transporterEmail);
+                continue;
+            }
             helper.setSubject(subject);
             helper.setText(body,true);
             javaMailSender.send(message);
