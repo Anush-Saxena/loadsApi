@@ -4,6 +4,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.validation.constraints.NotBlank;
 
+import com.TruckBooking.TruckBooking.Entities.Load.Publish;
 import com.TruckBooking.TruckBooking.Entities.Load.Status;
 
 import lombok.Data;
@@ -46,6 +47,8 @@ public class LoadRequest {
 	private String noOfTrucks;
 	private String noOfTyres;
 	private String LR; // optional
+	private String biddingEndDate;  //optional
+	private String biddingEndTime; //optional
 	
 	private String comment; // this should be an optional
 	private String loadingDate;
@@ -61,4 +64,5 @@ public class LoadRequest {
 	}
 
 	public Status status;
+    public Publish publish;
 }

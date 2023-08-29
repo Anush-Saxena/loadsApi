@@ -40,6 +40,8 @@ public class Load {
 	private String unloadingPoint2;		//optional
 	private String unloadingPointCity2;  //optional
 	private String unloadingPointState2; //optional
+	
+	
 
 	@NotBlank(message = "Product Type Cannot Be Empty")
 	private String productType;
@@ -62,6 +64,9 @@ public class Load {
 	private String postLoadDate;
 	
 	private Long rate; // optional
+	
+	private String biddingEndDate;  //optional
+	private String biddingEndTime; //optional
 
 	@Enumerated(EnumType.STRING)
 	private UnitValue unitValue; // optional
@@ -69,6 +74,9 @@ public class Load {
 	@Enumerated(EnumType.STRING)
 	public Status status;
 
+    @Enumerated(EnumType.STRING)
+	public Publish publish;
+	
 	@CreationTimestamp
 	public Timestamp timestamp;
 
@@ -78,6 +86,9 @@ public class Load {
 
 	public enum Status {
 		PENDING, ON_GOING, COMPLETED, EXPIRED
+	}
+		public enum Publish {
+		CONTRACT, BIDDING
 	}
 
 }

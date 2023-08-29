@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import javax.mail.MessagingException;
+
 import com.TruckBooking.TruckBooking.Dao.TransporterEmailDao;
 import com.TruckBooking.TruckBooking.Entities.TransporterEmail;
 import org.apache.commons.lang3.StringUtils;
@@ -16,12 +18,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.TruckBooking.ContractRateUpload.Dao.ContractRateRepo;
+import com.TruckBooking.ContractRateUpload.Dao.IndentDao;
+import com.TruckBooking.ContractRateUpload.Entity.Indent;
+import com.TruckBooking.ContractRateUpload.Entity.Indent.TransporterStatus;
+import com.TruckBooking.ContractRateUpload.Entity.Rates;
 import com.TruckBooking.TruckBooking.Constants.CommonConstants;
 import com.TruckBooking.TruckBooking.Dao.LoadDao;
 import com.TruckBooking.TruckBooking.Entities.Load;
+import com.TruckBooking.TruckBooking.Entities.Load.Publish;
+import com.TruckBooking.TruckBooking.Entities.Load.Status;
 import com.TruckBooking.TruckBooking.Exception.BusinessException;
 import com.TruckBooking.TruckBooking.Exception.EntityNotFoundException;
 import com.TruckBooking.TruckBooking.Model.LoadRequest;
@@ -143,6 +155,18 @@ public class LoadServiceImpl implements LoadService {
 		if(StringUtils.isNotBlank(temp)) {
 			load.setLR(temp.trim());
 			response.setLR(temp.trim());
+		}
+		
+		temp = loadrequest.getBiddingEndDate();
+		if(StringUtils.isNotBlank(temp)) {
+			load.setBiddingEndDate(temp.trim());
+			response.setBiddingEndDate(temp.trim());
+		}
+		
+		temp = loadrequest.getBiddingEndTime();
+		if(StringUtils.isNotBlank(temp)) {
+			load.setBiddingEndTime(temp.trim());
+			response.setBiddingEndTime(temp.trim());
 		}
 		
 		temp = loadrequest.getWeight().trim();
@@ -471,6 +495,17 @@ public class LoadServiceImpl implements LoadService {
 		if(updateLoad.getLR() != null) {
 			load.setLR(updateLoad.getLR());
 		}
+		
+		temp = updateLoad.getBiddingEndDate();
+		if (StringUtils.isNotBlank(temp)) {
+			load.setBiddingEndDate(temp.trim());
+		}
+		
+		temp = updateLoad.getBiddingEndTime();
+		if (StringUtils.isNotBlank(temp)) {
+			load.setBiddingEndTime(temp.trim());
+		}
+		
 
 		if (updateLoad.getStatus() != null) {
 
@@ -528,6 +563,8 @@ public class LoadServiceImpl implements LoadService {
 		response.setPostLoadDate(load.getPostLoadDate());
 		response.setComment(load.getComment());
 		response.setLR(load.getLR());
+		response.setBiddingEndDate(load.getBiddingEndDate());
+		response.setBiddingEndTime(load.getBiddingEndTime());
 		response.setPublishMethod(load.getPublishMethod());
 		response.setLoadingTime(load.getLoadingTime());
 		response.setStatus(load.getStatus());
@@ -557,5 +594,4 @@ public class LoadServiceImpl implements LoadService {
 		loadDao.delete(L.get());
 		log.info("load is deleted successfully");
 	}
-
 }
