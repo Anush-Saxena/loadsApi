@@ -3,6 +3,7 @@ package com.TruckBooking.TruckBooking.EmailTask;
 import com.TruckBooking.TruckBooking.Dao.TransporterEmailDao;
 import com.TruckBooking.TruckBooking.Entities.Load;
 import com.TruckBooking.TruckBooking.Entities.TransporterEmail;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import javax.mail.internet.MimeMessage;
 import javax.persistence.EntityManager;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+@Slf4j
 @Component
 public class EmailSender {
 
@@ -61,16 +63,22 @@ public class EmailSender {
                     "Product Type :"+load.getProductType();
             try{
                 helper.setTo(transporterEmail.getEmail());
+                helper.setSubject(subject);
+                helper.setText(body,true);
             }
-            catch (AddressException e){
-                System.out.println(e);
+            catch (Exception e){
+                log.info(String.valueOf(e));
                 transporterEmail.setStatus("wrong email");
                 transporterEmailDao.save(transporterEmail);
                 continue;
             }
-            helper.setSubject(subject);
-            helper.setText(body,true);
-            javaMailSender.send(message);
+            try{
+                javaMailSender.send(message);
+            }
+            catch(Exception e){
+                log.info(String.valueOf(e));
+                continue;
+            }
             transporterEmail.setStatus("sent");
             transporterEmailDao.save(transporterEmail);
         }
