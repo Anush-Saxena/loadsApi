@@ -244,6 +244,12 @@ definitions:
         type: string
       weight:
         type: string
+      unloadingPoint2:
+        type: string
+      unloadingPointCity2:
+        type: string
+      unloadingPointState2:
+        type: string
     title: CreateLoadResponse
   DeleteLoadResponse:
     type: object
@@ -290,6 +296,12 @@ definitions:
         type: string
       weight:
         type: string
+      unloadingPoint2:
+        type: string
+      unloadingPointCity2:
+        type: string
+      unloadingPointState2:
+        type: string
     title: Load
   LoadRequest:
     type: object
@@ -327,6 +339,12 @@ definitions:
       unloadingPointState:
         type: string
       weight:
+        type: string
+      unloadingPoint2:
+        type: string
+      unloadingPointCity2:
+        type: string
+      unloadingPointState2:
         type: string
     title: LoadRequest
   UpdateLoadResponse:
@@ -367,5 +385,11 @@ definitions:
       unloadingPointState:
         type: string
       weight:
+        type: string
+      unloadingPoint2:
+        type: string
+      unloadingPointCity2:
+        type: string
+      unloadingPointState2:
         type: string
     title: UpdateLoadResponse
