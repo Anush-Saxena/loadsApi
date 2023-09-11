@@ -208,91 +208,61 @@ definitions:
   CreateLoadResponse:
     type: object
     properties:
-      loadId:
-        type: string
-        required: true
       loadingPoint:
         type: string
-        required: true
       loadingPointCity:
         type: string
-        required: true
       loadingPointState:
         type: string
-        required: true
       unloadingPoint:
         type: string
-        required: true
       unloadingPointCity:
         type: string
-        required: true
       unloadingPointState:
         type: string
-        required: true
       productType:
         type: string
-        required: true
       truckType:
         type: string
-        required: true
       weight:
         type: string
-        required: true
       postLoadId:
         type: string
-        required: true
       postLoadDate:
         type: string
-        required: true
       loadingPoint2:
         type: string
-        required: false
       loadingPointCity2:
         type: string
-        required: false
       loadingPointState2:
         type: string
-        required: false
       unloadingPoint2:
         type: string
-        required: false
       unloadingPointCity2:
         type: string
-        required: false
       unloadingPointState2:
         type: string
-        required: false
       noOfTrucks:
         type: string
-        required: false
       noOfTyres:
         type: string
-        required: false
       LR:
         type: string
-        required: false
       publishMethod:
         type: string
-        required: false
       loadingDate:
         type: string
-        required: false
       loadingTime:
         type: string
-        required: false
       comment:
         type: string
-        required: false
       rate:
         type: integer
         format: int64
-        required: false
       biddingEndDate:
         type: string
-        required: false
       biddingEndTime:
         type: string
-        required: false
       unitValue:
         type: string
         enum:
@@ -310,91 +280,61 @@ definitions:
   Load:
     type: object
     properties:
-      loadId:
-        type: string
-        required: true
       loadingPoint:
         type: string
-        required: true
       loadingPointCity:
         type: string
-        required: true
       loadingPointState:
         type: string
-        required: true
       unloadingPoint:
         type: string
-        required: true
       unloadingPointCity:
         type: string
-        required: true
       unloadingPointState:
         type: string
-        required: true
       productType:
         type: string
-        required: true
       truckType:
         type: string
-        required: true
       weight:
         type: string
-        required: true
       postLoadId:
         type: string
-        required: true
       postLoadDate:
         type: string
-        required: true
       loadingPoint2:
         type: string
-        required: false
       loadingPointCity2:
         type: string
-        required: false
       loadingPointState2:
         type: string
-        required: false
       unloadingPoint2:
         type: string
-        required: false
       unloadingPointCity2:
         type: string
-        required: false
       unloadingPointState2:
         type: string
-        required: false
       noOfTrucks:
         type: string
-        required: false
       noOfTyres:
         type: string
-        required: false
       LR:
         type: string
-        required: false
       publishMethod:
         type: string
-        required: false
       loadingDate:
         type: string
-        required: false
       loadingTime:
         type: string
-        required: false
       comment:
         type: string
-        required: false
       rate:
         type: integer
         format: int64
-        required: false
       biddingEndDate:
         type: string
-        required: false
       biddingEndTime:
         type: string
-        required: false
       unitValue:
         type: string
         enum:
@@ -406,91 +346,61 @@ definitions:
   LoadRequest:
     type: object
     properties:
-      loadId:
-        type: string
-        required: true
       loadingPoint:
         type: string
-        required: true
       loadingPointCity:
         type: string
-        required: true
       loadingPointState:
         type: string
-        required: true
       unloadingPoint:
         type: string
-        required: true
       unloadingPointCity:
         type: string
-        required: true
       unloadingPointState:
         type: string
-        required: true
       productType:
         type: string
-        required: true
       truckType:
         type: string
-        required: true
       weight:
         type: string
-        required: true
       postLoadId:
         type: string
-        required: true
       postLoadDate:
         type: string
-        required: true
       loadingPoint2:
         type: string
-        required: false
       loadingPointCity2:
         type: string
-        required: false
       loadingPointState2:
         type: string
-        required: false
       unloadingPoint2:
         type: string
-        required: false
       unloadingPointCity2:
         type: string
-        required: false
       unloadingPointState2:
         type: string
-        required: false
       noOfTrucks:
         type: string
-        required: false
       noOfTyres:
         type: string
-        required: false
       LR:
         type: string
-        required: false
       publishMethod:
         type: string
-        required: false
       loadingDate:
         type: string
-        required: false
       loadingTime:
         type: string
-        required: false
       comment:
         type: string
-        required: false
       rate:
         type: integer
         format: int64
-        required: false
       biddingEndDate:
         type: string
-        required: false
       biddingEndTime:
         type: string
-        required: false
       unitValue:
         type: string
         enum:
@@ -502,91 +412,61 @@ definitions:
   UpdateLoadResponse:
     type: object
     properties:
-      loadId:
-        type: string
-        required: true
       loadingPoint:
         type: string
-        required: true
       loadingPointCity:
         type: string
-        required: true
       loadingPointState:
         type: string
-        required: true
       unloadingPoint:
         type: string
-        required: true
       unloadingPointCity:
         type: string
-        required: true
       unloadingPointState:
         type: string
-        required: true
       productType:
         type: string
-        required: true
       truckType:
         type: string
-        required: true
       weight:
         type: string
-        required: true
       postLoadId:
         type: string
-        required: true
       postLoadDate:
         type: string
-        required: true
       loadingPoint2:
         type: string
-        required: false
       loadingPointCity2:
         type: string
-        required: false
       loadingPointState2:
         type: string
-        required: false
       unloadingPoint2:
         type: string
-        required: false
       unloadingPointCity2:
         type: string
-        required: false
       unloadingPointState2:
         type: string
-        required: false
       noOfTrucks:
         type: string
-        required: false
       noOfTyres:
         type: string
-        required: false
       LR:
         type: string
-        required: false
       publishMethod:
         type: string
-        required: false
       loadingDate:
         type: string
-        required: false
       loadingTime:
         type: string
-        required: false
       comment:
         type: string
-        required: false
       rate:
         type: integer
         format: int64
-        required: false
       biddingEndDate:
         type: string
-        required: false
       biddingEndTime:
         type: string
-        required: false
       unitValue:
         type: string
         enum:
