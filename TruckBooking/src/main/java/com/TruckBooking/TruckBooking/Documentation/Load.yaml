@@ -101,6 +101,7 @@ paths:
         - in: body
           name: loadrequest
           description: loadrequest
+          required: false
           schema:
             $ref: '#/definitions/LoadRequest'
       responses:
@@ -161,6 +162,7 @@ paths:
         - in: body
           name: loadrequest
           description: loadrequest
+          required: false
           schema:
             $ref: '#/definitions/LoadRequest'
       responses:
