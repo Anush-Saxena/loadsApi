@@ -242,10 +242,6 @@ definitions:
         type: string
       unloadingPointState2:
         type: string
-      transporterList:
-       - ${emailId}
-       - ${name}
-       - ${transporterId}
       noOfTrucks:
         type: string
       noOfTyres:
