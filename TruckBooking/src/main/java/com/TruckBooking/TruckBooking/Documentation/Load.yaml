@@ -348,6 +348,7 @@ definitions:
     properties:
       loadingPoint:
         type: string
+        required: true
       loadingPointCity:
         type: string
       loadingPointState:
