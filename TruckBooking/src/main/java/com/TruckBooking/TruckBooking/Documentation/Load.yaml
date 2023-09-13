@@ -408,6 +408,19 @@ definitions:
           - PER_TRUCK
       status:
         type: string
+      required:
+        - loadingPoint
+        - loadingPointCity
+        - loadingPointState
+        - unloadingPoint
+        - unloadingPointCity
+        - loadingPointState
+        - productType
+        - truckType
+        - weight
+        - postLoadId
+        - postLoadDate
+        
     title: LoadRequest
   UpdateLoadResponse:
     type: object
