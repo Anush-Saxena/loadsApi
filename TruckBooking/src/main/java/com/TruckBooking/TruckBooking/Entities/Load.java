@@ -87,7 +87,7 @@ public class Load {
 	public enum Status {
 		PENDING, ON_GOING, COMPLETED, EXPIRED
 	}
-		public enum Publish {
+	public enum Publish {
 		CONTRACT, BIDDING
 	}
 

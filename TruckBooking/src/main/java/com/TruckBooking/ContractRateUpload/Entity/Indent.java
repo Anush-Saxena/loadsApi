@@ -6,6 +6,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -30,15 +31,19 @@ public class Indent {
     @ElementCollection
     @CollectionTable(name = "transporter_ids", joinColumns = @JoinColumn(name = "indent_id"))
     @Column(name = "transporter_id")
-    private List<String> transporterId = new ArrayList<>(); // Initialize the list
+    private List<String> TidList = new ArrayList<>(); // Initialize the list
+    // TidList is the list for all transporter Id's that we had find rank for.
 
     @NonNull
-    @Column(name = "Transporter")
-    private String transporter;
-
-    @NonNull
+    @ElementCollection
     @Column(name = "Email")
-    private String email;
+    private List<String> transporterEmail = new ArrayList<>();
+    // Email List of all the transporters, so we do not have to make connection to database again and again for email of each.
+
+    @NotNull
+    @Column(name = "Position")
+    private int position;
+    //Position is an index for the transporter to whom our system has assigned the load and waiting for the conformation.
 
     @UpdateTimestamp
     @Column(name = "AssignedTime")
@@ -53,11 +58,11 @@ public class Indent {
     }
 
     // Custom constructor
-    public Indent(String loadId, List<String>transport,String transporter, String Email,TransporterStatus status) {
+    public Indent(String loadId, List<String>transport, int position, List<String> transporterEmail,TransporterStatus status) {
         this.loadId = loadId;
-        this.transporterId = transport;
-        this.transporter=transporter;
-        this.email=Email;
+        this.TidList = transport;
+        this.position=position;
+        this.transporterEmail =transporterEmail;
         this.transporterStatus = status;
     }
 }

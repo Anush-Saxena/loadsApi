@@ -1,6 +1,5 @@
 package com.TruckBooking.ContractRateUpload.Service;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +10,7 @@ import javax.mail.MessagingException;
 import java.util.Iterator;
 
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -31,7 +31,6 @@ import com.TruckBooking.TruckBooking.Dao.TransporterEmailDao;
 import com.TruckBooking.TruckBooking.Entities.Load;
 import com.TruckBooking.TruckBooking.Entities.Load.Publish;
 import com.TruckBooking.TruckBooking.Entities.Load.Status;
-import com.TruckBooking.TruckBooking.Service.LoadServiceImpl;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -46,7 +45,7 @@ public class ContractRateService {
 	TransporterEmailDao transporterEmailDao;
 
 	@Autowired
-    ContractRateRepo contractpricerepo;
+    ContractRateRepo contractPriceRepo;
 
 	@Autowired
     IndentDao rankrepo;
@@ -55,153 +54,131 @@ public class ContractRateService {
 	private JavaMailSender mailSender;
 
     // check that file is of excel type or not
-    public static boolean checkExcelFormat(MultipartFile file) {
+    public boolean isExcelFile(MultipartFile file) {
 
         String contentType = file.getContentType();
-
-        if (contentType.equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")) {
-            return true;
-        } else {
-            return false;
-        }
+        return contentType.equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 
     }
 
     // convert excel to list of products
 
-    public static List<Rates> convertExcelToListOfProduct(InputStream is) {
+    public List<Rates> convertExcelToListOfRates(InputStream is) {
         List<Rates> list = new ArrayList<>();
 
-        try {
+        try (XSSFWorkbook workbook = new XSSFWorkbook(is)) {
+            XSSFSheet sheet = workbook.getSheet("Sheet1");
 
-            try (XSSFWorkbook workbook = new XSSFWorkbook(is)) {
-                XSSFSheet sheet = workbook.getSheet("Sheet1");
+            int rowNumber = 0;
+            Iterator<Row> rowIterator = sheet.iterator();
 
-                int rowNumber = 0;
-                Iterator<Row> iterator = sheet.iterator();
+            while (rowIterator.hasNext()) {
+                Row row = rowIterator.next();
+                int flag = 0;
+                if (rowNumber == 0) {
+                    rowNumber++;
+                    continue;
+                }
+                rowNumber++;
 
-                while (iterator.hasNext()) {
-                    Row row = iterator.next();
-                    int flag = 0;
-                    if (rowNumber == 0) {
-                        rowNumber++;
-                        continue;
-                    }
+                Iterator<Cell> cellIterator = row.iterator();
+                int cid = 0;
 
-                    Iterator<Cell> cells = row.iterator();
+                Rates p = new Rates();
+                try {
+                    while (cellIterator.hasNext()) {
+                        Cell cell = cellIterator.next();
+                        CellType type = cell.getCellType();
+                        System.out.println(cid);
+                        System.out.println(cellIterator.hasNext());
+                        if(cid==0 || cid==3 ||cid==4 || cid==5 || cid==6 && type.name().equals("String")){
 
-                    int cid = 0;
+                        }
 
-                    Rates p = new Rates();
+                       // code 3 is for the blank cells so if a  cell doesn't contains any data then the row won't get saved|
+                        if (type.getCode() == 3){
+                            log.error("Row "+rowNumber+" Contains some empty entries");
+                             break;
+                        }
 
-                    while (cells.hasNext()) {
-                        Cell cell = cells.next();
+                        // entry at the 0th index is to be shown always as Numeric not empty if it is empty.
+
+                        else if (cid==0 && type.name().equals("NUMERIC")) {
+                            log.error("Row "+rowNumber+" Contains some empty entries");
+                            break;
+                        }
 
                         switch (cid) {
                             case 0:
-                                try {
-                                    p.setUnLoadingPoint(cell.getStringCellValue());
-                                } catch (Exception e) {
-                                    System.out.println("UNP");
-                                    flag = 1;
-                                }
+                                p.setUnloadingPoint(cell.getStringCellValue());
                                 break;
                             case 1:
-                                try {
-                                    p.setWeight(String.valueOf((int) cell.getNumericCellValue()));
-                                } catch (Exception e) {
-                                    System.out.println("weight");
-                                    flag = 1;
-                                }
+                                p.setWeight(String.valueOf((int) cell.getNumericCellValue()));
                                 break;
                             case 2:
-                                try {
-                                    p.setRate((int) cell.getNumericCellValue());
-                                } catch (Exception e) {
-                                    System.out.println("Rate");
-                                    flag = 1;
-                                }
+                                p.setRate((int) cell.getNumericCellValue());
                                 break;
                             case 3:
-                                try {
-                                    p.setTransporterId(String.valueOf((int) cell.getNumericCellValue()));
-                                } catch (Exception e) {
-                                    System.out.println("Tid");
-                                    flag = 1;
-                                }
+                                p.setTransporterId(cell.getStringCellValue());
                                 break;
                             case 4:
-                                try {
-                                    p.setTransporterEmail(cell.getStringCellValue());
-                                } catch (Exception e) {
-                                    System.out.println("Email");
-                                    flag = 1;
-                                }
+                                p.setTransporterEmail(cell.getStringCellValue());
                                 break;
                             case 5:
-                                try {
-                                    p.setTransporterName(cell.getStringCellValue());
-                                } catch (Exception e) {
-                                    System.out.println("TraN");
-                                    flag = 1;
-                                }
+                                p.setTransporterName(cell.getStringCellValue());
                                 break;
                             case 6:
-                                try {
-                                    p.setLoadingPoint(cell.getStringCellValue());
-                                } catch (Exception e) {
-                                    System.out.println("Loap");
-                                    flag = 1;
-                                }
+                                p.setLoadingPoint(cell.getStringCellValue());
                                 break;
                             default:
                                 break;
                         }
                         cid++;
                     }
-
-                    if (flag == 1) {
-                        continue;
-                    } else {
+                    if (cid>=7){
                         list.add(p);
                     }
+                } catch (Exception e){
+                    log.error(String.valueOf(e));
                 }
             }
-
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(String.valueOf(e));
         }
-        // System.out.print(list.size());
         return list;
     }
 
     // this function helps us to save excel file.
-    public void save(MultipartFile file) {
+    public boolean save(MultipartFile file) {
 
         try {
-            List<Rates> products = ContractRateService.convertExcelToListOfProduct(file.getInputStream());
-            this.contractpricerepo.saveAll(products);
-            System.out.println("Saved");
-        } catch (IOException e) {
-            System.out.println("Error is error");
-            e.printStackTrace();
+            List<Rates> products = convertExcelToListOfRates(file.getInputStream());
+            contractPriceRepo.saveAll(products);
+            log.info("Saved");
+            return true;
+        } catch (Exception e) {
+            log.error(String.valueOf(e));
+            return false;
         }
     }
 
-    public List<String> getAllPrice(String unLoadingPoint, String weight, String loadid) {
 
-        List<Rates> list = this.contractpricerepo.findByUnLoadingPointAndWeightOrderByRateAsc(unLoadingPoint, weight);
-        List<String> transport = new ArrayList<>();
+
+    /*public List<String> getAllPrice(String unloadingPoint, String weight, String loadid) {
+
+        List<Rates> list = contractPriceRepo.findByUnloadingPointAndWeightOrderByRateAsc(unloadingPoint, weight);
+        List<String> tId = new ArrayList<>();
+        List<String>
 
         for (Rates i : list) {
-            transport.add(i.getTransporterId());
+            tId.add(i.getTransporterId());
         }
 
         if (list.isEmpty()) {
-            return transport;
+            return tId;
         }
 
-        Indent res = new Indent(loadid, transport, (list.get(0)).getTransporterId(),
+        Indent res = new Indent(loadid, tId, (list.get(0)).getTransporterId(),
                 (list.get(0).getTransporterEmail()), TransporterStatus.ON_GOING);
         Optional<Load> optionalLoad = loadDao.findByLoadId(loadid);
         if (optionalLoad.isPresent()) {
@@ -213,7 +190,7 @@ public class ContractRateService {
         // System.out.println(list.get(0));
 
         return transport;
-    }
+    }*/
 
     // Helps to send emails.
     public static void sendSimpleEmail(JavaMailSender mailSender, String toEmail, String subject, String body) {
@@ -226,8 +203,8 @@ public class ContractRateService {
         System.out.println("Mail Sent...");
     }
 
-    @Scheduled(fixedRate = 5000)
-    public void findRank() {
+    /*//@Scheduled(fixedRate = 5000)
+    public void findRankOriginal() {
         List<Load> rank = loadDao.findByPublishAndStatus(Publish.CONTRACT, Status.PENDING);
         List<String> arr = new ArrayList<>();
 
@@ -237,19 +214,42 @@ public class ContractRateService {
                 System.out.print(j);
             }
         }
+    }*/
+    @Scheduled(fixedRate = 5000)
+    public void findRank(){
+        List<Load> loads = loadDao.findByPublishMethodAndStatus("Contract",Status.PENDING);
+        List<String> tId;
+        List<String> tEmail;
+        List<Rates> rateList;
+        Indent rankedInfo;
+
+        for (Load x : loads){
+            rateList = contractPriceRepo.findByLoadingPointAndUnloadingPointAndWeightOrderByRateAsc(x.getLoadingPoint(),x.getUnloadingPoint(),x.getWeight());
+            tId = new ArrayList<>();
+            tEmail = new ArrayList<>();
+            for (Rates y: rateList){
+                tId.add(y.getTransporterId());
+                tEmail.add(y.getTransporterEmail());
+            }
+            rankedInfo = new Indent(x.getLoadId(), tId, 0, tEmail, TransporterStatus.ON_GOING);
+            x.setStatus(Status.ON_GOING);
+            loadDao.save(x);
+            rankrepo.save(rankedInfo);
+        }
+
     }
 
     @Scheduled(cron = "* * * * * *")
     public void triggerMail() throws MessagingException {
-        System.out.println("Email function running");
+        //System.out.println("Email function running");
         List<Indent> responses = this.rankrepo.findAll();
         for (Indent it : responses) {
             if ((it.getTransporterStatus()) == TransporterStatus.ON_GOING) {
                 System.out.println(it.getTransporterStatus());
                 try {
-                    sendSimpleEmail(mailSender, it.getEmail(), "Load Assignment",
+                    sendSimpleEmail(mailSender, (it.getTransporterEmail()).get(it.getPosition()), "Load Assignment",
                             "Load" + it.getLoadId()
-                                    + "is assigned to you complete it asap,check Liveasy dashboad for more information.");
+                                    + "is assigned to you complete it asap,check Liveasy dashboard for more information.");
                 } catch (Exception e) {
                     System.out.println("Mail not sent.");
                 }

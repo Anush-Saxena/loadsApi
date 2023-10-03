@@ -25,21 +25,19 @@ public class Rates {
     private String loadingPoint;
 
     @NotBlank(message = "UnLoading Point Cannot Be Empty")
-    @Column(name = "unLoadingPoint")
-    private String unLoadingPoint;
+    @Column(name = "unloadingPoint")
+    private String unloadingPoint;
 
     @NotNull(message = "Weight Cannot Be Empty")
     @Column(name = "weight")
     private String weight;
 
-    @NotNull(message = "Rates Cannot Be Empty")
     @Column(name = "rate")
     private Integer rate;
 
     @Column(name = "TransporterId")
     private String TransporterId;
 
-    @NotBlank(message = "Transporter Name Cannot Be Empty")
     @Column(name = "TransporterName")
     private String TransporterName;
 

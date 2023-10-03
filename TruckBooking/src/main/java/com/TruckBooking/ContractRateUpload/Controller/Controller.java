@@ -17,16 +17,19 @@ import lombok.extern.slf4j.Slf4j;
 public class Controller {
 
     @Autowired
-     ContractRateService ContractRateService;
+    ContractRateService contractRateService;
 
 	//upload the excel file.
     @PostMapping("/ContractRateUpload")
     public ResponseEntity<?> upload(@RequestParam("file") MultipartFile file) {
-        if (ContractRateService.checkExcelFormat(file)) {
+        if (contractRateService.isExcelFile(file)) {
             //true
-            this.ContractRateService.save(file);
-
-            return ResponseEntity.ok(Map.of("message", "File is uploaded and data is saved to database"));
+            if (contractRateService.save(file)){
+                return ResponseEntity.ok(Map.of("message", "File is uploaded and data is saved to database"));
+            }
+            else{
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Check the details again");
+            }
 
 
         }

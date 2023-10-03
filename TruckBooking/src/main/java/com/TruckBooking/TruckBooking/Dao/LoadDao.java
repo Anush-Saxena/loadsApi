@@ -36,6 +36,7 @@ public interface LoadDao extends JpaRepository<Load, String> {
 	List<Load> findByUnloadingPointStateAndStatus(String loadingPointState,Status status, Pageable pageable);
 	
 	List<Load> findByStatus(Status status, Pageable pageable);
+	List<Load> findByPublishMethodAndStatus(String publish, Status status);
 	List<Load>findByPublishAndStatus(Publish publish,Status status);
 
 }
