@@ -13,9 +13,10 @@ import com.TruckBooking.ULIP.Entity.FastagEntity;
 import com.TruckBooking.ULIP.Entity.SarathiEntity;
 import com.TruckBooking.ULIP.Entity.VahanEntity;
 import com.TruckBooking.ULIP.Service.ULIPService;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 
-
+@CrossOrigin
 @RestController
 public class ULIPController {
 	
