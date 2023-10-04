@@ -22,7 +22,7 @@ import com.TruckBooking.Booking.Model.BookingPutResponse;
 import com.TruckBooking.Booking.Service.BookingService;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.CrossOrigin;
+
 
 @CrossOrigin
 @RestController
