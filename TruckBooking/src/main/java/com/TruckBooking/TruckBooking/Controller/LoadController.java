@@ -1,5 +1,6 @@
 package com.TruckBooking.TruckBooking.Controller;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,6 +58,14 @@ public class LoadController {
 		return new ResponseEntity<>(loadService.getLoads(pageNo, loadingPointCity, unloadingPointCity, postLoadId,
 				truckType,suggestedLoads, transporterId), HttpStatus.OK);
 	}
+	
+	@GetMapping("/load/byDate")
+	public ResponseEntity<List<Load>>getDataBetweenTimestamps(
+	        @RequestParam Timestamp startTimestamp,
+	        @RequestParam Timestamp endTimestamp) {
+		return new ResponseEntity<>(loadService.getDataBetweenTimestamps(startTimestamp, endTimestamp), HttpStatus.OK);
+		
+	    }
 
 	@GetMapping("/load/{loadId}")
 	public ResponseEntity<Object> findLoad(@PathVariable String loadId) {

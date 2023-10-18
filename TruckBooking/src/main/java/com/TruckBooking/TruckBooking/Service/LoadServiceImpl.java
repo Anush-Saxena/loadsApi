@@ -1,5 +1,6 @@
 package com.TruckBooking.TruckBooking.Service;
 
+import java.sql.Timestamp;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -300,6 +301,10 @@ public class LoadServiceImpl implements LoadService {
 		return loadDao.findByStatus(Load.Status.PENDING, currentPage);
 	}
 
+	public List<Load> getDataBetweenTimestamps(Timestamp startTimestamp, Timestamp endTimestamp) {
+        return loadDao.findByTimestampBetween(startTimestamp, endTimestamp);
+    }
+	
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	@Override
 	public CreateLoadResponse getLoad(String loadId) {

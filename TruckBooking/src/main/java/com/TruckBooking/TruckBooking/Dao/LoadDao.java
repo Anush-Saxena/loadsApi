@@ -1,5 +1,6 @@
 package com.TruckBooking.TruckBooking.Dao;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,8 +36,12 @@ public interface LoadDao extends JpaRepository<Load, String> {
 
 	List<Load> findByUnloadingPointStateAndStatus(String loadingPointState,Status status, Pageable pageable);
 	
+	List<Load> findByTimestampBetween(Timestamp startTimestamp, Timestamp endTimestamp);
+
 	List<Load> findByStatus(Status status, Pageable pageable);
+	
 	List<Load> findByPublishMethodAndStatus(String publish, Status status);
+	
 	List<Load>findByPublishAndStatus(Publish publish,Status status);
 
 }
