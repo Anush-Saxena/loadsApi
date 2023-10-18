@@ -247,7 +247,7 @@ public class LoadServiceImpl implements LoadService {
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	@Override
 	public List<Load> getLoads(Integer pageNo, String loadingPointCity, String unloadingPointCity, String postLoadId,
-			String truckType, boolean suggestedLoads, String transporterId) {
+			String truckType, boolean suggestedLoads, String transporterId, Timestamp startTimestamp, Timestamp endTimestamp) {
 		log.info("getLoads service with params started");
 
 		if (pageNo == null)
@@ -296,14 +296,17 @@ public class LoadServiceImpl implements LoadService {
 			List<Load> load=transporterEmailDao.findLoadsByTransporterId(transporterId);
 			return load;
 		}
+		
+		if(startTimestamp!=null && endTimestamp!=null){
+			List<Load> load=loadDao.findByTimestampBetween(startTimestamp, endTimestamp);
+			return load;
+		}
 
 		log.info("getLoads service response is returned");
 		return loadDao.findByStatus(Load.Status.PENDING, currentPage);
 	}
 
-	public List<Load> getDataBetweenTimestamps(Timestamp startTimestamp, Timestamp endTimestamp) {
-        return loadDao.findByTimestampBetween(startTimestamp, endTimestamp);
-    }
+	
 	
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	@Override
@@ -599,4 +602,6 @@ public class LoadServiceImpl implements LoadService {
 		loadDao.delete(L.get());
 		log.info("load is deleted successfully");
 	}
+
+	
 }
