@@ -21,12 +21,12 @@ public class Rates {
     private Long id;
 
     @NotBlank(message = "Loading Point Cannot Be Empty")
-    @Column(name = "loadingPoint")
-    private String loadingPoint;
+    @Column(name = "loadingPointCity")
+    private String loadingPointCity;
 
     @NotBlank(message = "UnLoading Point Cannot Be Empty")
-    @Column(name = "unloadingPoint")
-    private String unloadingPoint;
+    @Column(name = "unloadingPointCity")
+    private String unloadingPointCity;
 
     @NotNull(message = "Weight Cannot Be Empty")
     @Column(name = "weight")

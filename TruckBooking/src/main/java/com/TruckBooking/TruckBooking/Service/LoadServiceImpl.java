@@ -28,7 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.TruckBooking.ContractRateUpload.Dao.ContractRateRepo;
 import com.TruckBooking.ContractRateUpload.Dao.IndentDao;
 import com.TruckBooking.ContractRateUpload.Entity.Indent;
-import com.TruckBooking.ContractRateUpload.Entity.Indent.TransporterStatus;
 import com.TruckBooking.ContractRateUpload.Entity.Rates;
 import com.TruckBooking.TruckBooking.Constants.CommonConstants;
 import com.TruckBooking.TruckBooking.Dao.LoadDao;

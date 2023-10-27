@@ -1,5 +1,6 @@
 package com.TruckBooking.ContractRateUpload.Entity;
 
+import com.TruckBooking.TruckBooking.Entities.Load;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -9,6 +10,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.repository.cdi.Eager;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -31,14 +33,14 @@ public class Indent {
     @ElementCollection
     @CollectionTable(name = "transporter_ids", joinColumns = @JoinColumn(name = "indent_id"))
     @Column(name = "transporter_id")
-    private List<String> TidList = new ArrayList<>(); // Initialize the list
+    private List<String> transporterIdList = new ArrayList<>(); // Initialize the list
     // TidList is the list for all transporter Id's that we had find rank for.
 
     @NonNull
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @Column(name = "Email")
     private List<String> transporterEmail = new ArrayList<>();
-    // Email List of all the transporters, so we do not have to make connection to database again and again for email of each.
+    // Email List of all the transporters, so we do not have to make connection to database again and again for address of each.
 
     @NotNull
     @Column(name = "Position")
@@ -49,20 +51,14 @@ public class Indent {
     @Column(name = "AssignedTime")
     private Timestamp assignedTime;
 
-    @Enumerated(EnumType.STRING)
-    @NonNull
-    private TransporterStatus transporterStatus;
-
-    public enum TransporterStatus {
-        PENDING, ON_GOING, COMPLETED, EXPIRED, REJECTED
-    }
+    private Load.Status status;
 
     // Custom constructor
-    public Indent(String loadId, List<String>transport, int position, List<String> transporterEmail,TransporterStatus status) {
+    public Indent(String loadId, List<String>transporter, int position, List<String> transporterEmail,Load.Status status) {
         this.loadId = loadId;
-        this.TidList = transport;
+        this.transporterIdList = transporter;
         this.position=position;
         this.transporterEmail =transporterEmail;
-        this.transporterStatus = status;
+        this.status = status;
     }
 }

@@ -1,22 +1,21 @@
 package com.TruckBooking.ContractRateUpload.Service;
 
 import java.io.InputStream;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import java.util.Optional;
-
-import javax.mail.MessagingException;
 
 import java.util.Iterator;
 
+import com.TruckBooking.ContractRateUpload.EmailSender.SendEmail;
+import com.google.type.DateTime;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,12 +23,10 @@ import org.springframework.web.multipart.MultipartFile;
 import com.TruckBooking.ContractRateUpload.Dao.ContractRateRepo;
 import com.TruckBooking.ContractRateUpload.Dao.IndentDao;
 import com.TruckBooking.ContractRateUpload.Entity.Indent;
-import com.TruckBooking.ContractRateUpload.Entity.Indent.TransporterStatus;
 import com.TruckBooking.ContractRateUpload.Entity.Rates;
 import com.TruckBooking.TruckBooking.Dao.LoadDao;
 import com.TruckBooking.TruckBooking.Dao.TransporterEmailDao;
 import com.TruckBooking.TruckBooking.Entities.Load;
-import com.TruckBooking.TruckBooking.Entities.Load.Publish;
 import com.TruckBooking.TruckBooking.Entities.Load.Status;
 
 import lombok.extern.slf4j.Slf4j;
@@ -48,10 +45,10 @@ public class ContractRateService {
     ContractRateRepo contractPriceRepo;
 
 	@Autowired
-    IndentDao rankrepo;
+    IndentDao indentDao;
 
-	@Autowired
-	private JavaMailSender mailSender;
+    @Autowired
+    private SendEmail email;
 
     // check that file is of excel type or not
     public boolean isExcelFile(MultipartFile file) {
@@ -59,6 +56,20 @@ public class ContractRateService {
         String contentType = file.getContentType();
         return contentType.equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 
+    }
+
+    // this function helps us to save excel file.
+    public boolean save(MultipartFile file) {
+
+        try {
+            List<Rates> products = convertExcelToListOfRates(file.getInputStream());
+            contractPriceRepo.saveAll(products);
+            log.info("Saved");
+            return true;
+        } catch (Exception e) {
+            log.error(String.valueOf(e));
+            return false;
+        }
     }
 
     // convert excel to list of products
@@ -89,11 +100,6 @@ public class ContractRateService {
                     while (cellIterator.hasNext()) {
                         Cell cell = cellIterator.next();
                         CellType type = cell.getCellType();
-                        System.out.println(cid);
-                        System.out.println(cellIterator.hasNext());
-                        if(cid==0 || cid==3 ||cid==4 || cid==5 || cid==6 && type.name().equals("String")){
-
-                        }
 
                        // code 3 is for the blank cells so if a  cell doesn't contains any data then the row won't get saved|
                         if (type.getCode() == 3){
@@ -103,14 +109,14 @@ public class ContractRateService {
 
                         // entry at the 0th index is to be shown always as Numeric not empty if it is empty.
 
-                        else if (cid==0 && type.name().equals("NUMERIC")) {
-                            log.error("Row "+rowNumber+" Contains some empty entries");
-                            break;
-                        }
+//                        else if (cid==0 && type.name().equals("NUMERIC")) {
+//                            log.error("Row "+rowNumber+" Contains some empty entries");
+//                            break;
+//                        }
 
                         switch (cid) {
                             case 0:
-                                p.setUnloadingPoint(cell.getStringCellValue());
+                                p.setUnloadingPointCity(cell.getStringCellValue());
                                 break;
                             case 1:
                                 p.setWeight(String.valueOf((int) cell.getNumericCellValue()));
@@ -128,7 +134,7 @@ public class ContractRateService {
                                 p.setTransporterName(cell.getStringCellValue());
                                 break;
                             case 6:
-                                p.setLoadingPoint(cell.getStringCellValue());
+                                p.setLoadingPointCity(cell.getStringCellValue());
                                 break;
                             default:
                                 break;
@@ -148,111 +154,131 @@ public class ContractRateService {
         return list;
     }
 
-    // this function helps us to save excel file.
-    public boolean save(MultipartFile file) {
-
-        try {
-            List<Rates> products = convertExcelToListOfRates(file.getInputStream());
-            contractPriceRepo.saveAll(products);
-            log.info("Saved");
-            return true;
-        } catch (Exception e) {
-            log.error(String.valueOf(e));
-            return false;
-        }
-    }
-
-
-
-    /*public List<String> getAllPrice(String unloadingPoint, String weight, String loadid) {
-
-        List<Rates> list = contractPriceRepo.findByUnloadingPointAndWeightOrderByRateAsc(unloadingPoint, weight);
-        List<String> tId = new ArrayList<>();
-        List<String>
-
-        for (Rates i : list) {
-            tId.add(i.getTransporterId());
-        }
-
-        if (list.isEmpty()) {
-            return tId;
-        }
-
-        Indent res = new Indent(loadid, tId, (list.get(0)).getTransporterId(),
-                (list.get(0).getTransporterEmail()), TransporterStatus.ON_GOING);
-        Optional<Load> optionalLoad = loadDao.findByLoadId(loadid);
-        if (optionalLoad.isPresent()) {
-            Load load = optionalLoad.get();
-            load.setStatus(Status.ON_GOING);
-            loadDao.save(load);
-        }
-        this.rankrepo.save(res);
-        // System.out.println(list.get(0));
-
-        return transport;
-    }*/
-
-    // Helps to send emails.
-    public static void sendSimpleEmail(JavaMailSender mailSender, String toEmail, String subject, String body) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("mail@gmail.com");
-        message.setTo(toEmail);
-        message.setText(body);
-        message.setSubject(subject);
-        mailSender.send(message);
-        System.out.println("Mail Sent...");
-    }
-
-    /*//@Scheduled(fixedRate = 5000)
-    public void findRankOriginal() {
-        List<Load> rank = loadDao.findByPublishAndStatus(Publish.CONTRACT, Status.PENDING);
-        List<String> arr = new ArrayList<>();
-
-        for (Load i : rank) {
-            arr = getAllPrice(i.getUnloadingPoint(), i.getWeight(), i.getLoadId());
-            for (String j : arr) {
-                System.out.print(j);
-            }
-        }
-    }*/
-    @Scheduled(fixedRate = 5000)
+    @Scheduled(fixedRate = 60000)
     public void findRank(){
-        List<Load> loads = loadDao.findByPublishMethodAndStatus("Contract",Status.PENDING);
-        List<String> tId;
-        List<String> tEmail;
+        System.out.println("Find Rank Running");
+        List<Load> loads = loadDao.findByPublishMethodAndStatus("contract",Status.PENDING);
+        List<String> transporterId;
+        List<String> transporterEmail;
         List<Rates> rateList;
-        Indent rankedInfo;
+        Indent indentTable;
 
         for (Load x : loads){
-            rateList = contractPriceRepo.findByLoadingPointAndUnloadingPointAndWeightOrderByRateAsc(x.getLoadingPoint(),x.getUnloadingPoint(),x.getWeight());
-            tId = new ArrayList<>();
-            tEmail = new ArrayList<>();
-            for (Rates y: rateList){
-                tId.add(y.getTransporterId());
-                tEmail.add(y.getTransporterEmail());
+            rateList = contractPriceRepo.findByLoadingPointCityAndUnloadingPointCityAndWeightOrderByRateAsc(x.getLoadingPointCity(),x.getUnloadingPointCity(),x.getWeight());
+            if (!rateList.isEmpty()){
+                transporterId = new ArrayList<>();
+                transporterEmail = new ArrayList<>();
+                for (Rates y : rateList) {
+                    transporterId.add(y.getTransporterId());
+                    transporterEmail.add(y.getTransporterEmail());
+                }
+                indentTable = new Indent(x.getLoadId(), transporterId, 0, transporterEmail, Status.NOT_ASSIGNED);
+                x.setStatus(Status.NOT_ASSIGNED);
+                loadDao.save(x);
+                indentDao.save(indentTable);
             }
-            rankedInfo = new Indent(x.getLoadId(), tId, 0, tEmail, TransporterStatus.ON_GOING);
-            x.setStatus(Status.ON_GOING);
-            loadDao.save(x);
-            rankrepo.save(rankedInfo);
         }
 
     }
 
-    @Scheduled(cron = "* * * * * *")
-    public void triggerMail() throws MessagingException {
-        //System.out.println("Email function running");
-        List<Indent> responses = this.rankrepo.findAll();
+    @Scheduled(fixedRate = 120000)
+    public void triggerMail()  {
+        System.out.println("Email function running");
+        List<Indent> responses = this.indentDao.findAll();
+        System.out.println(responses.size());
         for (Indent it : responses) {
-            if ((it.getTransporterStatus()) == TransporterStatus.ON_GOING) {
-                System.out.println(it.getTransporterStatus());
-                try {
-                    sendSimpleEmail(mailSender, (it.getTransporterEmail()).get(it.getPosition()), "Load Assignment",
-                            "Load" + it.getLoadId()
-                                    + "is assigned to you complete it asap,check Liveasy dashboard for more information.");
-                } catch (Exception e) {
-                    System.out.println("Mail not sent.");
+            if ((it.getStatus()) == Status.NOT_ASSIGNED) {
+                List<String> list = it.getTransporterEmail();
+                System.out.println("inside loop"+list.size());
+                Load load = loadDao.findByLoadId(it.getLoadId()).get();
+
+                // subject format "indent for 25MT from ambala to delhi"
+                String subject = "Indent for "+load.getWeight()+" from "+ load.getLoadingPointCity() +" to "+ load.getUnloadingPointCity();
+
+                // body format  //Asian Paint has posted a load
+                                //Loading Point: Mumbai,Mumbai,Maharashtra, India
+                                //to
+                                //Unloading Point: Delhi Public School Bengaluru South, Road Mango Garden Layout Konanakune,Bengaluru,Karnataka, India
+                                //Requirements
+                                //Truck Type: TRAILER_BODY
+                                //Tyre :6
+                                //Weight :25
+                                //Product Type :Agriculture and Food
+                String body = load.getLoadingPoint()+" has posted a load\n" +
+                        "Loading Point: " + load.getLoadingPoint() + ", " + load.getLoadingPointCity() + ", " + load.getLoadingPointState() + ", India\n" +
+                        "to\n" +
+                        "Unloading Point: " +load.getUnloadingPoint() + ", " + load.getUnloadingPointCity() + ", " + load.getUnloadingPointState() + ", India\n" +
+                        "Requirements\n" +
+                        "Truck Type: " + load.getTruckType() +"\n" +
+                        "Tyre : " + load.getNoOfTyres() + "\n" +
+                        "Weight : " + load.getWeight() + "\n" +
+                        "Product Type : " + load.getProductType();
+
+//                address = new SendEmail(it.getTransporterEmail().get(it.getPosition()), body, subject);
+                email.setAddress(it.getTransporterEmail().get(it.getPosition()));
+                email.setBody(body);
+                email.setSubject(subject);
+                boolean x = email.isSend();
+                if (x){
+                    it.setStatus(Status.INDENT_ASSIGNED);
                 }
+                else{
+                    // if address of transporter is wrong then system is gonna change the position to the next one
+                    // i.e. indent will be assigned to the next transporter immediately
+                    if (it.getPosition()+1<list.size()){
+                        it.setPosition(it.getPosition() + 1);
+                    }
+                    else {
+                        it.setStatus(Status.TRANSPORTER_REJECTED);// To look here
+                    }
+                }
+                indentDao.save(it);
+            }
+        }
+    }
+
+    @Scheduled(fixedRate = 120000)
+    public void checkRejected(){
+        List<Indent> rejectedIndents = indentDao.findByStatus(Status.TRANSPORTER_REJECTED);
+        System.out.println("Rejected " + rejectedIndents.size());
+        if (!rejectedIndents.isEmpty()){
+            for (Indent indent: rejectedIndents){
+                if (indent.getPosition()+1<indent.getTransporterEmail().size()){
+                    indent.setPosition(indent.getPosition()+1);
+                    indent.setStatus(Status.NOT_ASSIGNED);
+                }
+                else{
+                    indent.setStatus(Status.TRANSPORTER_REJECTED);// To change here
+                }
+                indentDao.save(indent);
+            }
+        }
+    }
+
+    // Scheduler to automatically assign the load to next indent
+    @Scheduled(fixedRate = 1800000)
+    public void checkUnassigned(){
+        List<Indent> unassignedIndents = indentDao.findByStatus(Status.INDENT_ASSIGNED);
+        System.out.println("Unassigned " + unassignedIndents.size());
+        if (!unassignedIndents.isEmpty()){
+            // For Getting current time
+            Date date = new Date();
+            for (Indent indent: unassignedIndents){
+                // These lines check if the time duration is greater than 2 hours
+                int initial = indent.getAssignedTime().getHours();
+                int current = date.getHours();
+                if (current - initial < 2){
+                    System.out.println("Time limit less than 2 hours");
+                    continue;
+                }
+                if (indent.getPosition()+1<indent.getTransporterEmail().size()){
+                    indent.setPosition(indent.getPosition()+1);
+                    indent.setStatus(Status.NOT_ASSIGNED);
+                }
+                else{
+                    indent.setStatus(Status.TRANSPORTER_REJECTED);// To change here
+                }
+                indentDao.save(indent);
             }
         }
     }
